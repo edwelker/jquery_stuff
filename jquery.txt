@@ -1,0 +1,165 @@
+pre-I. Reminder about jQuery v. $
+jQuery.noConflict() removes the $() alias from the global scope, while leaving jQuery() in the global scope.  Prefer to do this in NCBI, since I never know who or what may already use $().
+
+I. Selectors
+If you wish to use any of the meta-characters (#;&,.+*~':"!^$[]()=>|/  ) as a literal part of a name, you must escape the character with two backslashes: \\. For example, if you have an an input with name="names[]", you can use the selector $("input[name=names\\[\\]]").
+
+a. jQuery() or $() function signature in a selection context
+	jQuery( selector, [context]) 
+	selector: a string representing a selector
+	context (optional): a context element where searching should start. Omitted, it defaults to "document".
+	May be a DOM Element, Document, or jQuery element.
+
+b. Basic Selectors
+	http://api.jquery.com/category/selectors/basic-css-selectors/
+
+	$('*') - universal selector [CSS2]
+	$('.class') - class seletor [CSS1]
+	$('element') - type selector [CSS1]
+	$('#id') - id selector [CSS1]
+	$(".a, .b, .c") - multiple selections
+	
+c. CSS
+	http://api.jquery.com/category/selectors/hierarchy-selectors/
+	http://www.w3.org/TR/CSS21/selector.html
+
+	$('e f') - matches any f that is a decendant of e [CSS1]
+	$('e > f') - matches any f that is a child of e (child selector) [CSS2]
+	$('e + f') - matches any f that is directly preceded by e (adjacent sibling selector) [CSS2]
+	$('e ~ f') - matches any f that are preceded by e (general sibling selector) [CSS3]
+	
+d. attr selectors []
+	http://api.jquery.com/category/selectors/attribute-selectors/
+	http://www.w3.org/TR/css3-selectors/#attribute-selectors
+
+	Syntax : can vary: $('[attr=val]') or $('[attr="val"]')
+
+	$('[attr]') - matches any element with "attr" attribute [CSS2]
+	$('[attr=val]') - matches any attribute with that exact value [CSS2]
+	$('[attr~=val]') - matches any attribute that contains that value [CSS2]
+	$('[attr|=val]') - matches any attribute that starts with that value (where the next character is either blank or a -) [CSS2]
+	$('[attr^=val]') - matches any attribute that starts with the value [CSS3]
+	$('[attr$=val]') - matches any attribute that ends with the value [CSS3]
+	$('[attr*=val]') - matches any attribute that contains the value [CSS3]
+	
+	$('[attr!=val]') - matches any attribute that doesn't contain the value. CSS equiv: ":not([attr=val])" [Not explicitly in CSS spec]
+	$('[attr][attr2]') - multiple attribute match
+	
+e. pseudo-classes
+i. structural
+	http://api.jquery.com/category/selectors/child-filter-selectors/
+	http://www.w3.org/TR/css3-selectors/#structural-pseudos
+	
+	$('div > p:first-child') - matches the first p child of every div (equiv: ":nth-child(1)") [CSS2]
+	$('div > p:last-child') - matches the last p child of every div (no jQuery equiv, CSS equiv: ":nth-last-child(1)") [CSS3]
+	$('p:only-child') - matches any p whose parent has no other children (equiv: "p:first-child:last-child") [CSS3]
+	
+	[:nth-child uses 1 based array, like CSS]
+	$('li:nth-child(5)') - matches the 5th child li (equiv: 0n+5) [CSS3 - index argument]
+	$('li:nth-child(even)') - matches all even li's (equiv: 2n) [CSS3 - "even" argument]
+	$('li:nth-child(odd)') - matches all odd li's (equiv: 2n+1) [CSS3 - "odd" argument]
+	$('li:nth-child(10n-1)') - matches the 9th, 19th, 29th, etc. elements [CSS3 - equation argument]
+	
+	$('p:empty') - matches any p that has no children (including text nodes) [CSS3]
+	
+	CSS3 structural pseudo-classes not implemented in jQuery:
+	:root, :nth-last-child(), :nth-of-type(), nth-last-of-type(), :first-of-type, :last-of-type, :only-of-type
+	
+ii. other pseudo-class types or convience methods
+
+	Basic Filters
+		http://api.jquery.com/category/selectors/basic-filter-selectors/
+	Full list:
+		:animated, :eq(), :even, :first, :gt(), :header, :last, :lt(), :not() [CSS3, negation pseudo-class], :odd
+	
+	[:eq(), :lt(), :gt(), :even, :odd uses 0 based arrays, like JavaScript]
+	$('p:eq(n)') - matches the nth of all selected p's
+	$('p:gt(n)') - matches all p's with index greater than n
+	$('p:lt(n)') - matches all p's with index less than n
+	$('tr:even') - matches all tr's with even indices including 0, so 0, 2, 4... 2n
+	$('tr:odd') - matches all tr's with odd indices, so 1, 3, 5... 2n+1
+	
+	$('input:not(:checked])') - matches all inputs of of type radio or checkbox that are not checked.
+	
+	$('div:animated') - matches any div in the process of being animated (via the jQuery .animate() function)
+	$('p:first') - matches the first p found (equiv: ".eq(0)")
+	$('p:last') - matches the last p found
+	$(':header') - matches all headers <h1>...<h6>
+	
+	
+	Content Filters
+		http://api.jquery.com/category/selectors/content-filter-selector/
+	Full list:
+		:contains(), :empty [CSS3, structural pseudo-class], :has(), :parent
+		
+	$('div:has(p)') - matches any div that has a p descendant	
+	$('div:contains("CSS")') - matches any div that contains directly or in a decendant the case-sensitive text, "CSS"
+	$('p:empty') - matches any p that contains no children (including text nodes)
+	$('div:parent') - matches any div that has any children (including text nodes)
+	
+	
+	Form Filters
+	http://api.jquery.com/category/selectors/form-selectors/
+	
+	Full List:
+		:button, :checkbox, :checked [CSS3 UI Element state], :diabled [CSS3 UI Element state], :enabled [CSS3 UI Element state], :file, :image, :input, :password, :radio, :reset, :seleted, :text
+		
+	
+	Visibility Filter
+	http://api.jquery.com/category/selectors/visibility-filter-selectors/
+	:hidden, :visible
+	Element "hidden" if it, or an ancestor has display:none, visibility: hidden, type="hidden" (for input), or it's width and height are 0.  
+	
+	
+	CSS pseudo-class selectors not implemented: 
+	Link Class:
+		:link, :visited [CSS1]
+	User Action Class:
+		:active [CSS1], :hover [CSS2], :focus [CSS2]
+	Target Class
+		:target [CSS3]
+	Lang() Class:
+		:lang() [CSS2]
+	::first-line [CSS1]
+	::first-letter [CSS1]
+	::before [CSS2]
+	::after [CSS2]
+	
+
+II. Selectors Best practices
+a. Use IDs to speed up selection
+	$('#id') is much faster than $('.class')
+b. Use Context-based selection
+	$('p', document.getElementById('id')) is much faster than $('p')
+	For example, every search made without a context searches <head>, despite how rarely that's intended.
+	
+	
+
+III. Dealing with DOM
+a. Dealing with Attributes
+	
+	.addClass(), .hasClass(), .removeClass(), .toggleClass()
+	.attr(), removeAttr(), .html(), .val()
+
+
+3. text/html/val/get
+4. creating html
+5. length/size
+6. each
+7. Chaining
+8. find, filter, is, not, end (but excluding DOM walking)
+9. append, replace, insert, etc.
+
+IV. Dealing with DOM Best Practices
+1. use length, not size
+2. do not use .css()
+3. hold onto loop invariants
+4. Do all DOM adjustments at once to minimize repaints and reflows (http://dev.opera.com/articles/view/efficient-javascript/?page=3)
+3. ?
+
+V. Events
+1. document.ready and alternatives
+2. bind/unbind
+3. click, keyup, etc. (jquery sugar)
+
+Events Best practices?

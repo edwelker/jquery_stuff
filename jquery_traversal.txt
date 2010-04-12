@@ -1,0 +1,26 @@
+Class Attributes
+addClass, hasClass, removeClass, toggleClass
+
+Copying
+clone()
+
+Dom insertion, Around
+unwrap, wrap, wrapAll, wrapInner
+
+Dom insertion, inside
+append, appendTo, html, prepend, prependTo, text
+
+Dom insertion, Outside
+after, before, insertAfter, insertBefore
+
+Dom Removal
+detach, empty, remove, unwrap
+
+Dom replacement
+replaceAll, replaceWith
+
+General Attributes
+attr, removeAttr, val
+
+Style Properties
+css, height, innerHeight, innerWidth, offset, outerHeight, outerWidth, position, scrollLeft, scrollTop, width
