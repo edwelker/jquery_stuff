@@ -137,45 +137,58 @@ b. Use Context-based selection
 	
 
 III. Dealing with DOM
-a. each()
+a. each() - iterate over jQuery set, calling a function for each element
 
+b. Properties of jQuery sets
+	.length()/.size() - the number of elements in the set.  Only use .length()
 
-b. Class Attributes - All work with either a single element or set of elements
+c. Class Attributes - All work with either a single element or set of elements
 	.addClass("classOne classTwo") - adds classnames to the element or set, returns element or set
 	.removeClass("classTwo classThree") - removes classnames from the element or set, returns element or set
 	.hasClass("classOne") - returns boolean True if a classname (singlular) is present on element or set, else False 
 	.toggleClass("classFour") - will toggle between adding and removing a class from an element or set, returns element or set
-		
-	General Attributes
+
+	
+d. General Attributes
 	.attr("at") - getter, gets the value of the first matched element's attribute, "at"
 	.attr("at", "atValue") - setter, sets the value of the element or set's "at" attribute to "atValue"
+	.attr({"one": "1", "two": "2"}) - setter, sets multiple attributes at once
 	.removeAttr("at") - removes the attribute "at" from the element or set
 	.val() - getter, gets the value of the first matched element's "value" attribute (useful for form elements)
 	.val("initial value") - sets the element or set's "value" attribute to "initial value"
 	
-	
+e. DOM Contents	
 	.html() - getter, gets the html contents of the first matched element [fails on XML]
 	.html("<strong>Man</strong>") - setter, sets the html contents of the element or set to the string
-	.text() - getter, gets concat'ed text contents of first matched element and decendants [XML safe]
-	.text("hi world") - setter, sets text contents of element to the string
+	.text() - getter, gets concat'ed text contents of element or set and decendants [XML safe]
+	.text("hi world") - setter, sets text contents of element or set to the string
 	
-
+f. DOM Elements from jQuery objects
+	.get() - get the DOM elements from the jQuery matched set
+	.get(0) - get a specific DOM element from the jQuery matched set
 	
 	
+g. Creating HTML
+	jQuery('<em>create</em>') - If string contains a <element> jQuery creates the DOM elements and returns a jQuery object.
+	.clone(boolean) - will copy a jQuery element. True argument will copy all attached event handlers as well.
 	
+h. 
 	
-	
-3. get
-4. creating html
-5. length/size
-6. each
+			
 7. Chaining
 8. find, filter, is, not, end (but excluding DOM walking)
 9. append, replace, insert, etc.
 
 IV. Dealing with DOM Best Practices
-1. use length, not size
-2. do not use .css()
+
+a. Use .length(), not .size().  
+	
+	They return the same, but length is more like JavaScript, as well as posessing a faster implementation.  Only use .length().
+
+b. Don't use .css()
+	
+	CSS exists in separate files for a million good reasons. Don't make things harder to debug using .css(), use .addClass and .removeClass instead.
+	
 3. hold onto loop invariants
 4. Do all DOM adjustments at once to minimize repaints and reflows (http://dev.opera.com/articles/view/efficient-javascript/?page=3)
 3. ?
