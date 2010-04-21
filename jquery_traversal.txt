@@ -24,3 +24,9 @@ attr, removeAttr, val
 
 Style Properties
 css, height, innerHeight, innerWidth, offset, outerHeight, outerWidth, position, scrollLeft, scrollTop, width
+
+Misc->Dom Element Methods
+get, index, size, toArray
+
+Misc->Collection Manipulation
+each, jQuery.param

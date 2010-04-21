@@ -129,6 +129,7 @@ ii. other pseudo-class types or convience methods
 II. Selectors Best practices
 a. Use IDs to speed up selection
 	$('#id') is much faster than $('.class')
+	
 b. Use Context-based selection
 	$('p', document.getElementById('id')) is much faster than $('p')
 	For example, every search made without a context searches <head>, despite how rarely that's intended.
@@ -136,13 +137,35 @@ b. Use Context-based selection
 	
 
 III. Dealing with DOM
-a. Dealing with Attributes
+a. each()
+
+
+b. Class Attributes - All work with either a single element or set of elements
+	.addClass("classOne classTwo") - adds classnames to the element or set, returns element or set
+	.removeClass("classTwo classThree") - removes classnames from the element or set, returns element or set
+	.hasClass("classOne") - returns boolean True if a classname (singlular) is present on element or set, else False 
+	.toggleClass("classFour") - will toggle between adding and removing a class from an element or set, returns element or set
+		
+	General Attributes
+	.attr("at") - getter, gets the value of the first matched element's attribute, "at"
+	.attr("at", "atValue") - setter, sets the value of the element or set's "at" attribute to "atValue"
+	.removeAttr("at") - removes the attribute "at" from the element or set
+	.val() - getter, gets the value of the first matched element's "value" attribute (useful for form elements)
+	.val("initial value") - sets the element or set's "value" attribute to "initial value"
 	
-	.addClass(), .hasClass(), .removeClass(), .toggleClass()
-	.attr(), removeAttr(), .html(), .val()
+	
+	.html() - getter, gets the html contents of the first matched element [fails on XML]
+	.html("<strong>Man</strong>") - setter, sets the html contents of the element or set to the string
+	.text() - getter, gets concat'ed text contents of first matched element and decendants [XML safe]
+	.text("hi world") - setter, sets text contents of element to the string
+	
 
-
-3. text/html/val/get
+	
+	
+	
+	
+	
+3. get
 4. creating html
 5. length/size
 6. each
