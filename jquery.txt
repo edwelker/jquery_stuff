@@ -134,10 +134,38 @@ b. Use Context-based selection
 	$('p', document.getElementById('id')) is much faster than $('p')
 	For example, every search made without a context searches <head>, despite how rarely that's intended.
 	
+
+III. Chaining
+	
 	
 
-III. Dealing with DOM
-a. each() - iterate over jQuery set, calling a function for each element
+IV. Filtering selection sets
+	$('set').filter('selector') - reduce the matched set to elements that match 'selector'
+	$('set').find('selector') - get decendants of jQuery matched set that match 'selector' 
+
+	$('set').is('selector') - returns boolean true if one item in matched set matches 'selector'
+	$('set').not('selector') - returns jQuery set of items in matched set that don't match 'selector'
+	$('set').has('selector') - returns jQuery set of items with a decendant that matches 'selector'
+	
+	[.eq, .first, .last, .slice all 0 index based]
+	$('set').eq(x) - returns item at position x in selection set
+	$('set').first() - returns first element in selection set (equivalent to .eq(0))
+	$('set').last() - returns last element in selelction set (equivalent to eq(set.length-1))
+	$('set').slice(2) - returns 3rd through end (length-1) elements in selection set 
+	$('set').slice(2,4) - returns 3rd through 5th elements in selection set
+	
+	.end() - end filtering and return to original matched set
+		ex: $('li').last().end() is equivalent to $('li')
+		
+	$('set').map(function(i,ele){ 
+		return this.className;
+	});
+	
+	Map a function onto the selection set to return a new array.
+	
+
+V. Dealing with DOM
+a. each(function(i, ele){ ... }) - Iterate over jQuery set, calling a function for each element. [Returns selection set.]
 
 b. Properties of jQuery sets
 	.length()/.size() - the number of elements in the set.  Only use .length()
@@ -172,14 +200,11 @@ g. Creating HTML
 	jQuery('<em>create</em>') - If string contains a <element> jQuery creates the DOM elements and returns a jQuery object.
 	.clone(boolean) - will copy a jQuery element. True argument will copy all attached event handlers as well.
 	
-h. 
 	
-			
-7. Chaining
-8. find, filter, is, not, end (but excluding DOM walking)
+	
 9. append, replace, insert, etc.
 
-IV. Dealing with DOM Best Practices
+VI. Dealing with DOM Best Practices
 
 a. Use .length(), not .size().  
 	
@@ -189,11 +214,50 @@ b. Don't use .css()
 	
 	CSS exists in separate files for a million good reasons. Don't make things harder to debug using .css(), use .addClass and .removeClass instead.
 	
-3. hold onto loop invariants
-4. Do all DOM adjustments at once to minimize repaints and reflows (http://dev.opera.com/articles/view/efficient-javascript/?page=3)
-3. ?
+c. Don't recalculate loop invariants (hoist them!) [http://en.wikipedia.org/wiki/Loop-invariant_code_motion]
+	
+	Inefficient: Don't recalculate $('#example input') twice!
+	var all_values = '';
+	for(var i=0; i < $('#example input').length; i++) {
+		all_values += $('#example input')[i].val() + "\n";
+	}
+	
+	Better: Hoist loop invariants
+	var all_values = '';
+	var set = $('#example input')
+	for(var i=0; i<set.length; i++){
+		all_values += set[i].val() + "\n";
+	}
+	
+	Wait, you missed one.
+	var all_values = '';
+	var set = $('#example input');
+	var setLength = set.length;
+	for(var i=0; i<set.length; i++){
+		all_values += set[i].val() + "\n";
+	}
+	
+	
+	More efficient: Use each to do the looping over the array for you.
+	*Bonus points for clarity.
+	var all_values = '';
+	$('#example input').each(function(i, item){
+		all_values += item.val() + '\n';
+	});
+	
+	
+	Most efficient: Use a for loop, avoid the each() and value() function call overheads, use ++i, cross-browser fix for getting "value"
+	Don't use this, it's almost always a case of pre-mature optimization
+	var set = $('example input')
+	for(var item; i=-1; item=set[++i]){
+		all_values += item.attributes.getNamedItem(‘value’).nodeValue; + '\n';
+	}
 
-V. Events
+
+d. Do all DOM adjustments at once to minimize repaints and reflows (http://dev.opera.com/articles/view/efficient-javascript/?page=3)
+
+
+VII. Events
 1. document.ready and alternatives
 2. bind/unbind
 3. click, keyup, etc. (jquery sugar)
