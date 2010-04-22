@@ -136,7 +136,14 @@ b. Use Context-based selection
 	
 
 III. Chaining
+a. If you're too lazy to do use context-based selection, use chains and filters to reduce the number of nodes to search
+b. Debugging: Breaking chains
+	Instead of $('li').addClass('list').find('.nav_item').addClass('inline_nav'), first break apart the selection sets, and perform functions on variables instead.
 	
+	all_lis = $('li')
+	all_lis.addClass('list')
+	nav_items = all_lis.find('nav_item')
+	nav_items.addClass('inline_nav')
 	
 
 IV. Filtering selection sets
@@ -206,23 +213,25 @@ g. Creating HTML
 	
 	
 h. Insertion, replacement, removal, wrapping
-	html|selector - either $('<li>blah</li>') or $('li.blah') can be used. The first is a single element, the second is a matched set of elements, and can be 0, 1, or more than 1 elements.
+	content AND container - can be either a single element $('<li>content</li>') or a selection of elements $('li')
 
 i. Insertion inside an element
-	$('set').append(html|selector) - insert 'html|selector' at the end of every element in the jQuery matched set
-	$('set').prepend(html|selector) - insert 'html|selector' at the beginning every element in the jQuery matched set
-	$('set').appendTo(element|selector) - insert all items in the jQuery matched set at the end of 'element|selector'
-	$('set').prependTo(element|selector) - insert all items in the jQuery matched set at the beginning of 'element|selector'
+	container.append(content), 
+	content.appendTo(container) - insert 'content' at the end (inside) of every element in the container
+	container.prepend(content), 
+	content.prependTo(container) - insert 'content' at the beginning (inside) every element in the container
+	
 	
 ii. Insertion outside an element
-	$('set').after(html|selector) - insert 'html|selector' after each element in the jQuery matched set
-	$('set').before(html|selector) - insert 'html|selector' before each element in the jQuery matched set
-	$('set').insertAfter(element|selector) - insert all items in the jQuery matched set after 'element|selector'
-	$('set').insertBefore(element|selector) - insert all items in the jQuery matched set before 'element|selector'
+	container.after(content), 
+	content.insertAfter(container) - insert 'content' after (outside) every element in the container
+	container.before(content), 
+	content.insertBefore(container) - insert 'html|selector' before each element in the jQuery matched set
+
 	
 iii. Replacement
-	$('set').replaceWith(html|selector) - replace each element in the jQuery matched set with 'html|selector'
-	$('set').replaceAll(element|selector) - replace 
+	container.replaceWith(content),
+	content.replaceAll(container) - replace every item in the container with 'content' 
 	
 iv. Removal
 	.detach('selector') - removes all matched elements, but keeps events and jQuery information (useful for re-insertion)
@@ -230,10 +239,11 @@ iv. Removal
 	.empty('selector') - removes all children from the matched element(s)
 	
 v. Wrapping
-	$('set').wrap(html) - wrap 'html' around each individual element in the matched set
+	container.wrap(content) - wrap 'content' around every element in the container
+	container.wrapInner(content) - will wrap 'content' around every element in the container's decendants (will effectively wrap the inside)
+	container.wrapAll('content') - will wrap 'content' around all consecutive elements in the container. [if they are not consecutive, it will make them consecutive] 
 	.unwrap(element) - remove parents from 'element', attach 'element' where parent was attached
-	.wrapAll('selector') - will wrap all consecutive elements in the matched set. [if they are not consecutive, it will make them consecutive] 
-	$('set').wrapInner(element) - will wrap 'element' in each element of the matched set
+	
 
 j. Not covered - Style properties
 	.height(), .innerHeight(), .innerWidth(), .offset(), .outerHeight(), .outerWidth(), .position(), .scrollLeft(), .scrollTop(), .width()
