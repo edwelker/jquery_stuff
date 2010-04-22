@@ -160,8 +160,7 @@ IV. Filtering selection sets
 	$('set').map(function(i,ele){ 
 		return this.className;
 	});
-	
-	Map a function onto the selection set to return a new array.
+	Maps a function onto the selection set and returns a new array.
 	
 
 V. Dealing with DOM
@@ -192,8 +191,12 @@ e. DOM Contents
 	.text("hi world") - setter, sets text contents of element or set to the string
 	
 f. DOM Elements from jQuery objects
-	.get() - get the DOM elements from the jQuery matched set
-	.get(0) - get a specific DOM element from the jQuery matched set
+	$('set').get() - get the DOM elements from the jQuery matched set
+	$('set').get(0) - get a specific DOM element from the jQuery matched set
+	$('set').index() - returns the index of the first element in the matched set
+	$('set').index('selector') - returns the index of the first matching element in the matched set
+	$('set').index(element) - returns the index of the matching element in the matched set (can pass either a DOM element or jQuery element)
+	$('set').toArray() - returns an array of DOM elements based on the matched set
 	
 	
 g. Creating HTML
@@ -202,10 +205,40 @@ g. Creating HTML
 	
 	
 	
-9. append, replace, insert, etc.
+h. Insertion, replacement, removal, wrapping
+	html|selector - either $('<li>blah</li>') or $('li.blah') can be used. The first is a single element, the second is a matched set of elements, and can be 0, 1, or more than 1 elements.
+
+i. Insertion inside an element
+	$('set').append(html|selector) - insert 'html|selector' at the end of every element in the jQuery matched set
+	$('set').prepend(html|selector) - insert 'html|selector' at the beginning every element in the jQuery matched set
+	$('set').appendTo(element|selector) - insert all items in the jQuery matched set at the end of 'element|selector'
+	$('set').prependTo(element|selector) - insert all items in the jQuery matched set at the beginning of 'element|selector'
+	
+ii. Insertion outside an element
+	$('set').after(html|selector) - insert 'html|selector' after each element in the jQuery matched set
+	$('set').before(html|selector) - insert 'html|selector' before each element in the jQuery matched set
+	$('set').insertAfter(element|selector) - insert all items in the jQuery matched set after 'element|selector'
+	$('set').insertBefore(element|selector) - insert all items in the jQuery matched set before 'element|selector'
+	
+iii. Replacement
+	$('set').replaceWith(html|selector) - replace each element in the jQuery matched set with 'html|selector'
+	$('set').replaceAll(element|selector) - replace 
+	
+iv. Removal
+	.detach('selector') - removes all matched elements, but keeps events and jQuery information (useful for re-insertion)
+	.remove('selector') - removes all matched elements, as well as associated events, and jQuery information
+	.empty('selector') - removes all children from the matched element(s)
+	
+v. Wrapping
+	$('set').wrap(html) - wrap 'html' around each individual element in the matched set
+	.unwrap(element) - remove parents from 'element', attach 'element' where parent was attached
+	.wrapAll('selector') - will wrap all consecutive elements in the matched set. [if they are not consecutive, it will make them consecutive] 
+	$('set').wrapInner(element) - will wrap 'element' in each element of the matched set
+
+j. Not covered - Style properties
+	.height(), .innerHeight(), .innerWidth(), .offset(), .outerHeight(), .outerWidth(), .position(), .scrollLeft(), .scrollTop(), .width()
 
 VI. Dealing with DOM Best Practices
-
 a. Use .length(), not .size().  
 	
 	They return the same, but length is more like JavaScript, as well as posessing a faster implementation.  Only use .length().
@@ -247,7 +280,7 @@ c. Don't recalculate loop invariants (hoist them!) [http://en.wikipedia.org/wiki
 	
 	
 	Most efficient: Use a for loop, avoid the each() and value() function call overheads, use ++i, cross-browser fix for getting "value"
-	Don't use this, it's almost always a case of pre-mature optimization
+	Don't use this regularly, it's always a case of pre-mature optimization
 	var set = $('example input')
 	for(var item; i=-1; item=set[++i]){
 		all_values += item.attributes.getNamedItem(‘value’).nodeValue; + '\n';
