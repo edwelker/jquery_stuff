@@ -1,8 +1,429 @@
 <html>
 <head>
-<script
-src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<title>jQuery and the DOM</title>
+<style>
+body { font-family: arial, helvetica, sans-serif; font-size: 77%; }
+</style>
 </head>
 <body>
+
+<h1>jQuery and the DOM</h1>
+
+<h3>Reminder about jQuery vs. $</h3>
+<p>jQuery.noConflict() removes the $() alias from the global scope, while leaving jQuery() in the global scope.  Prefer to do this in NCBI, since I never know who or what may already use $().</p>
+
+<h2>Selectors</h2>
+<p>If you wish to use any of the meta-characters (#;&,.+*~':"!^$[]()=>|/  ) as a literal part of a name, you must escape the character with two backslashes: \\. For example, if you have an an input with name="names[]", you can use the selector $("input[name=names\\[\\]]").</p>
+
+<ul>
+<li>jQuery() or $() function signature in a selection context</li>
+<pre>
+	jQuery( selector, [context]) 
+	selector: a string representing a selector
+	context (optional): a context element where searching should start. Omitted, it defaults to "document".
+	May be a DOM Element, Document, or jQuery element.
+</pre>
+
+<li>Basic Selectors (<a href="http://api.jquery.com/category/selectors/basic-css-selectors/">jQuery docs</a>)</li>
+<pre>
+	$('*') - universal selector [CSS2]
+	$('.class') - class seletor [CSS1]
+	$('element') - type selector [CSS1]
+	$('#id') - id selector [CSS1]
+	$(".a, .b, .c") - multiple selections
+</pre>
+	
+<li>CSS</li>
+<p>http://api.jquery.com/category/selectors/hierarchy-selectors/
+	http://www.w3.org/TR/CSS21/selector.html</p>
+
+<pre>
+	$('e f') - matches any f that is a decendant of e [CSS1]
+	$('e > f') - matches any f that is a child of e (child selector) [CSS2]
+	$('e + f') - matches any f that is directly preceded by e (adjacent sibling selector) [CSS2]
+	$('e ~ f') - matches any f that are preceded by e (general sibling selector) [CSS3]
+</pre>
+	
+<li>Attribute Selectors []</li>
+<p>http://api.jquery.com/category/selectors/attribute-selectors/
+	http://www.w3.org/TR/css3-selectors/#attribute-selectors</p>
+
+<p>Syntax : can vary: $('[attr=val]') or $('[attr="val"]')</p>
+
+<pre>
+	$('[attr]') - matches any element with "attr" attribute [CSS2]
+	$('[attr=val]') - matches any attribute with that exact value [CSS2]
+	$('[attr~=val]') - matches any attribute that contains that value [CSS2]
+	$('[attr|=val]') - matches any attribute that starts with that value (where the next character is either blank or a -) [CSS2]
+	$('[attr^=val]') - matches any attribute that starts with the value [CSS3]
+	$('[attr$=val]') - matches any attribute that ends with the value [CSS3]
+	$('[attr*=val]') - matches any attribute that contains the value [CSS3]
+	
+	$('[attr!=val]') - matches any attribute that doesn't contain the value. CSS equiv: ":not([attr=val])" [Not explicitly in CSS spec]
+	$('[attr][attr2]') - multiple attribute match
+</pre>
+	
+<li>Pseudo-classes</li>
+<ul>
+<li>Structural</li>
+<p>http://api.jquery.com/category/selectors/child-filter-selectors/
+	http://www.w3.org/TR/css3-selectors/#structural-pseudos</p>
+	
+<pre>
+	$('div > p:first-child') - matches the first p child of every div (equiv: ":nth-child(1)") [CSS2]
+	$('div > p:last-child') - matches the last p child of every div (no jQuery equiv, CSS equiv: ":nth-last-child(1)") [CSS3]
+	$('p:only-child') - matches any p whose parent has no other children (equiv: "p:first-child:last-child") [CSS3]
+	
+	[:nth-child uses 1 based array, like CSS]
+	$('li:nth-child(5)') - matches the 5th child li (equiv: 0n+5) [CSS3 - index argument]
+	$('li:nth-child(even)') - matches all even li's (equiv: 2n) [CSS3 - "even" argument]
+	$('li:nth-child(odd)') - matches all odd li's (equiv: 2n+1) [CSS3 - "odd" argument]
+	$('li:nth-child(10n-1)') - matches the 9th, 19th, 29th, etc. elements [CSS3 - equation argument]
+	
+	$('p:empty') - matches any p that has no children (including text nodes) [CSS3]
+	
+	CSS3 structural pseudo-classes not implemented in jQuery:
+	:root, :nth-last-child(), :nth-of-type(), nth-last-of-type(), :first-of-type, :last-of-type, :only-of-type
+</pre>
+	
+<li>Other pseudo-class types or convience methods</li>
+
+<ul>
+<li>Basic Filters</li>
+<pre>		http://api.jquery.com/category/selectors/basic-filter-selectors/
+	Full list:
+		:animated, :eq(), :even, :first, :gt(), :header, :last, :lt(), :not() [CSS3, negation pseudo-class], :odd
+	
+	[:eq(), :lt(), :gt(), :even, :odd uses 0 based arrays, like JavaScript]
+	$('p:eq(n)') - matches the nth of all selected p's
+	$('p:gt(n)') - matches all p's with index greater than n
+	$('p:lt(n)') - matches all p's with index less than n
+	$('tr:even') - matches all tr's with even indices including 0, so 0, 2, 4... 2n
+	$('tr:odd') - matches all tr's with odd indices, so 1, 3, 5... 2n+1
+	
+	$('input:not(:checked])') - matches all inputs of of type radio or checkbox that are not checked.
+	
+	$('div:animated') - matches any div in the process of being animated (via the jQuery .animate() function)
+	$('p:first') - matches the first p found (equiv: ".eq(0)")
+	$('p:last') - matches the last p found
+	$(':header') - matches all headers &lt;h1&gt;...&lt;h6&gt;
+</pre>
+	
+<li>Content Filters</li>
+<pre>
+		http://api.jquery.com/category/selectors/content-filter-selector/
+	Full list:
+		:contains(), :empty [CSS3, structural pseudo-class], :has(), :parent
+		
+	$('div:has(p)') - matches any div that has a p descendant	
+	$('div:contains("CSS")') - matches any div that contains directly or in a decendant the case-sensitive text, "CSS"
+	$('p:empty') - matches any p that contains no children (including text nodes)
+	$('div:parent') - matches any div that has any children (including text nodes)
+</pre>	
+	
+<li>Form Filters</li>
+<pre>	http://api.jquery.com/category/selectors/form-selectors/
+	
+	Full List:
+		:button, :checkbox, :checked [CSS3 UI Element state], :diabled [CSS3 UI Element state], :enabled [CSS3 UI Element state], :file, :image, :input, :password, :radio, :reset, :seleted, :text
+</pre>
+	
+<li>Visibility Filter</li>
+<pre>
+	http://api.jquery.com/category/selectors/visibility-filter-selectors/
+	:hidden, :visible
+	Element "hidden" if it, or an ancestor has display:none, visibility: hidden, type="hidden" (for input), or it's width and height are 0.  
+</pre>
+	
+	
+<li>CSS pseudo-class selectors not implemented:</li>
+<pre>	
+	Link Class:
+		:link, :visited [CSS1]
+	User Action Class:
+		:active [CSS1], :hover [CSS2], :focus [CSS2]
+	Target Class
+		:target [CSS3]
+	Lang() Class:
+		:lang() [CSS2]
+	::first-line [CSS1]
+	::first-letter [CSS1]
+	::before [CSS2]
+	::after [CSS2]
+</pre>
+</ul>
+</ul>
+</ul>
+
+<h2>Selectors Best practices</h2>
+<ul>
+<li>Use IDs to speed up selection</li>
+	<p>$('#id') is much faster than $('.class')</p>
+	
+<li>Use Context-based selection</li>
+<p>$('p', document.getElementById('id')) is much faster than $('p')
+	For example, every search made without a context searches &lt;head&gt;, despite how rarely that's intended.</p>
+</ul>
+
+<h2>Chaining</h2>
+<ul>
+<li>If you're too lazy to do use context-based selection, use chains and filters.  Instead of iterating over the whole DOM, you're only iterating over a subset.</li>
+
+<li>Debugging: Breaking chains</li>
+	<p>Instead of $('li').addClass('list').find('.nav_item').addClass('inline_nav'), first break apart the selection sets, and perform functions on variables instead.</p>
+<pre>	
+	all_lis = $('li')
+	all_lis.addClass('list')
+	nav_items = all_lis.find('nav_item')
+	nav_items.addClass('inline_nav')
+</pre>
+</ul>
+
+
+<h2>Filtering selection sets</h2>
+<pre>
+	$('set').filter('selector') - reduce the matched set to elements that match 'selector'
+	$('set').find('selector') - get decendants of jQuery matched set that match 'selector' 
+
+	$('set').is('selector') - returns boolean true if one item in matched set matches 'selector'
+	$('set').not('selector') - returns jQuery set of items in matched set that don't match 'selector'
+	$('set').has('selector') - returns jQuery set of items with a decendant that matches 'selector'
+	
+	[.eq, .first, .last, .slice all 0 index based]
+	$('set').eq(x) - returns item at position x in selection set
+	$('set').first() - returns first element in selection set (equivalent to .eq(0))
+	$('set').last() - returns last element in selelction set (equivalent to eq(set.length-1))
+	$('set').slice(2) - returns 3rd through end (length-1) elements in selection set 
+	$('set').slice(2,4) - returns 3rd through 5th elements in selection set
+	
+	.end() - end filtering and return to original matched set
+		ex: $('li').last().end() is equivalent to $('li')
+		
+	$('set').map(function(i,ele){ 
+		return this.className;
+	});
+	Maps a function onto the selection set and returns a new array.
+</pre>
+	
+
+<h2>Dealing with DOM</h2>
+<ul>
+<li>The .each() function</li>
+<pre>
+	each(function(i, ele){ ... }) - Iterate over jQuery set, calling a function for each element. [Returns selection set.]
+</pre>
+
+<li>Properties of jQuery sets</li>
+<pre>
+	.length()/.size() - the number of elements in the set.  Only use .length()
+</pre>
+
+
+<li>Class Attributes - All work with either a single element or set of elements</li>
+<pre>
+	.addClass("classOne classTwo") - adds classnames to the element or set, returns element or set
+	.removeClass("classTwo classThree") - removes classnames from the element or set, returns element or set
+	.hasClass("classOne") - returns boolean True if a classname (singlular) is present on element or set, else False 
+	.toggleClass("classFour") - will toggle between adding and removing a class from an element or set, returns element or set
+</pre>
+	
+	
+<li>General Attributes</li>
+<pre>
+	.attr("at") - getter, gets the value of the first matched element's attribute, "at"
+	.attr("at", "atValue") - setter, sets the value of the element or set's "at" attribute to "atValue"
+	.attr({"one": "1", "two": "2"}) - setter, sets multiple attributes at once
+	.removeAttr("at") - removes the attribute "at" from the element or set
+	.val() - getter, gets the value of the first matched element's "value" attribute (useful for form elements)
+	.val("initial value") - sets the element or set's "value" attribute to "initial value"
+</pre>	
+	
+<li>DOM Contents</li>
+<pre>
+	.html() - getter, gets the html contents of the first matched element [fails on XML]
+	.html("&lt;strong&gt;Man&lt;/strong&gt;") - setter, sets the html contents of the element or set to the string
+	.text() - getter, gets concat'ed text contents of element or set and decendants [XML safe]
+	.text("hi world") - setter, sets text contents of element or set to the string
+</pre>	
+	
+	
+<li>DOM Elements from jQuery objects</li>
+<pre>
+	$('set').get() - get the DOM elements from the jQuery matched set
+	$('set').get(0) - get a specific DOM element from the jQuery matched set
+	$('set').index() - returns the index of the first element in the matched set
+	$('set').index('selector') - returns the index of the first matching element in the matched set
+	$('set').index(element) - returns the index of the matching element in the matched set (can pass either a DOM element or jQuery element)
+	$('set').toArray() - returns an array of DOM elements based on the matched set
+</pre>
+	
+	
+<li>Creating HTML</li>
+<pre>
+	jQuery('&lt;em&gt;create&lt;/em&gt;') - If string contains a <element> jQuery creates the DOM elements and returns a jQuery object.
+	.clone(boolean) - will copy a jQuery element. True argument will copy all attached event handlers as well.
+</pre>	
+	
+	
+<li>Insertion, replacement, removal, wrapping</li>
+<p>content AND container - can be either a single element $('&lt;li&gt;content&lt/li&gt;') or a selection of elements $('li')</p>
+
+<ul>
+<li>Insertion inside an element</li>
+<pre>
+	container.append(content), 
+	content.appendTo(container) - insert 'content' at the end (inside) of every element in the container
+	container.prepend(content), 
+	content.prependTo(container) - insert 'content' at the beginning (inside) every element in the container
+</pre>
+	
+	
+<li>Insertion outside an element</li>
+<pre>
+	container.after(content), 
+	content.insertAfter(container) - insert 'content' after (outside) every element in the container
+	container.before(content), 
+	content.insertBefore(container) - insert 'html|selector' before each element in the jQuery matched set
+</pre>
+	
+	
+<li>Replacement</li>
+<pre>
+	container.replaceWith(content),
+	content.replaceAll(container) - replace every item in the container with 'content' 
+</pre>
+	
+<li>Removal</li>
+<pre>
+	.detach('selector') - removes all matched elements, but keeps events and jQuery information (useful for re-insertion)
+	.remove('selector') - removes all matched elements, as well as associated events, and jQuery information
+	.empty('selector') - removes all children from the matched element(s)
+</pre>
+
+	
+<li>Wrapping</li>
+<pre>
+	container.wrap(content) - wrap 'content' around every element in the container
+	container.wrapInner(content) - will wrap 'content' around every element in the container's decendants (will effectively wrap the inside)
+	container.wrapAll('content') - will wrap 'content' around all consecutive elements in the container. [if they are not consecutive, it will make them consecutive] 
+	.unwrap(element) - remove parents from 'element', attach 'element' where parent was attached
+</pre>
+	
+
+<li>Not covered but existing - Style properties</li>
+<p>
+	.height(), .innerHeight(), .innerWidth(), .offset(), .outerHeight(), .outerWidth(), .position(), .scrollLeft(), .scrollTop(), .width()
+</p>
+</ul>
+</ul>
+</ul>
+
+
+<h2>Dealing with DOM Best Practices</h2>
+<ul>
+<li>Use .length(), not .size().</li>
+<p>	
+	They return the same, but length is more like JavaScript, as well as posessing a faster implementation.  Only use .length().
+</p>
+	
+<li>Don't use .css()</li>
+<p>	
+	CSS exists in separate files for a million good reasons. Don't make things harder to debug using .css(), use .addClass and .removeClass instead.
+</p>
+	
+<li>Don't recalculate loop invariants (hoist them!) [<a href="http://en.wikipedia.org/wiki/Loop-invariant_code_motion">http://en.wikipedia.org/wiki/Loop-invariant_code_motion</a>]</li>
+
+	
+<p>Inefficient: Don't recalculate $('#example input') twice!</p>
+<pre><code>
+	var all_values = '';
+	for(var i=0; i < $('#example input').length; i++) {
+		all_values += $('#example input')[i].val() + "\n";
+	}
+</code></pre>
+	
+<p>Better: Hoist loop invariants</p>
+<pre><code>
+	var all_values = '';
+	var set = $('#example input')
+	for(var i=0; i<set.length; i++){
+		all_values += set[i].val() + "\n";
+	}
+</code></pre>
+	
+<p>Wait, you missed one.</p>
+<pre><code>
+	var all_values = '';
+	var set = $('#example input');
+	var setLength = set.length;
+	for(var i=0; i<setLength; i++){
+		all_values += set[i].val() + "\n";
+	}
+</code></pre>
+	
+	
+<p>More efficient: Use each to do the looping over the array for you.</p>
+<p><strong>Bonus points for clarity.</strong></p>
+<pre><code>
+	var all_values = '';
+	$('#example input').each(function(i, item){
+		all_values += item.val() + '\n';
+	});
+</code></pre>
+	
+	
+<p>Most efficient: Use a for loop, avoid the each() and value() function call overheads, use ++i, cross-browser fix for getting "value" (minus selects)</p>
+<p><strong>Don't use this regularly, it's always a case of pre-mature optimization</strong></p>
+<pre><code>
+	var set = $('example input')
+	for(var item; i=-1; item=set[++i]){
+		all_values += item.attributes.getNamedItem('value').nodeValue; + '\n';
+	}
+</code></pre>
+
+
+<li><a href="http://dev.opera.com/articles/view/efficient-javascript/?page=3">Do all DOM adjustments at once to minimize repaints and reflows</a></li>
+</ul>
+
+
+<h2>Events</h2>
+<ul>
+<li>Document events</li>
+<pre>
+	document.ready(function(){ ... }) - executes when the DOM is ready (but may be before all CSS, Images, scripts, etc. have loaded)
+	element.load(function(){ ... }) - executes when the element [usually "document"] is fully loaded (all CSS, Images, etc. have been loaded) [alias: .bind('load', f(){})
+</pre>
+	
+<li>Binding Events</li>
+<pre>
+	.bind('eventType', function(){}) - will attach an event to the context element(s) to execute 'function' whenever 'eventType' occurs
+	.unbind('eventType', handler) - will remove an event from the context element(s) of type 'eventType' and of callback 'handler' (Anonymous function won't work here, becuase it won't be recognised by function signature.)
+</pre>
+	
+<li>jQuery events [Syntatic sugar for .bind('click', handler)]</li>
+<ul>
+<li>Browser</li>
+<p>.error(), .resize(), .scroll()</p>
+	
+<li>Form</li>
+<p>
+.blur(), .change(), .focus(), .select(), .submit()
+</p>
+	
+<li>Keyboard</li>
+<p>
+.focusin(), .focusout(), .keydown(), .keypress(), .keyup()
+</p>
+	
+<li>Mouse</li>
+<p>
+.click(), .dblclick(), .focusin(), .focusout(), .hover(), .mousedown(), .mouseenter(), .mouseleave(), .mousemove(), .mouseout(), .mouseover(), .mouseup(), .toggle()
+</p>
+</ul>
+</ul>
+
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
 </body>
 </html>

@@ -246,7 +246,7 @@ v. Wrapping
 	.unwrap(element) - remove parents from 'element', attach 'element' where parent was attached
 	
 
-j. Not covered - Style properties
+j. Not covered but existing - Style properties
 	.height(), .innerHeight(), .innerWidth(), .offset(), .outerHeight(), .outerWidth(), .position(), .scrollLeft(), .scrollTop(), .width()
 
 VI. Dealing with DOM Best Practices
