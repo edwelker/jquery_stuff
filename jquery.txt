@@ -302,8 +302,23 @@ d. Do all DOM adjustments at once to minimize repaints and reflows (http://dev.o
 
 
 VII. Events
-1. document.ready and alternatives
-2. bind/unbind
-3. click, keyup, etc. (jquery sugar)
-
-Events Best practices?
+a. Document events
+	document.ready(function(){ ... }) - executes when the DOM is ready (but may be before all CSS, Images, scripts, etc. have loaded)
+	element.load(function(){ ... }) - executes when the element [usually "document"] is fully loaded (all CSS, Images, etc. have been loaded) [alias: .bind('load', f(){})
+	
+2. Binding Events
+	.bind('eventType', function(){}) - will attach an event to the context element(s) to execute 'function' whenever 'eventType' occurs
+	.unbind('eventType', handler) - will remove an event from the context element(s) of type 'eventType' and of callback 'handler' (Anonymous function won't work here, becuase it won't be recognised by function signature.)
+	
+3. jQuery events [Syntatic sugar for .bind('click', handler)]
+i. Browser
+	.error(), .resize(), .scroll()
+	
+ii. Form
+	.blur(), .change(), .focus(), .select(), .submit()
+	
+iii. Keyboard
+	.focusin(), .focusout(), .keydown(), .keypress(), .keyup()
+	
+iv. Mouse
+	.click(), .dblclick(), .focusin(), .focusout(), .hover(), .mousedown(), .mouseenter(), .mouseleave(), .mousemove(), .mouseout(), .mouseover(), .mouseup(), .toggle()
