@@ -136,7 +136,8 @@ b. Use Context-based selection
 	
 
 III. Chaining
-a. If you're too lazy to do use context-based selection, use chains and filters to reduce the number of nodes to search
+a. If you're too lazy to do use context-based selection, use chains and filters.  Instead of iterating over the whole DOM, you're only iterating over a subset.
+
 b. Debugging: Breaking chains
 	Instead of $('li').addClass('list').find('.nav_item').addClass('inline_nav'), first break apart the selection sets, and perform functions on variables instead.
 	
@@ -276,7 +277,7 @@ c. Don't recalculate loop invariants (hoist them!) [http://en.wikipedia.org/wiki
 	var all_values = '';
 	var set = $('#example input');
 	var setLength = set.length;
-	for(var i=0; i<set.length; i++){
+	for(var i=0; i<setLength; i++){
 		all_values += set[i].val() + "\n";
 	}
 	
@@ -289,11 +290,11 @@ c. Don't recalculate loop invariants (hoist them!) [http://en.wikipedia.org/wiki
 	});
 	
 	
-	Most efficient: Use a for loop, avoid the each() and value() function call overheads, use ++i, cross-browser fix for getting "value"
+	Most efficient: Use a for loop, avoid the each() and value() function call overheads, use ++i, cross-browser fix for getting "value" (minus selects)
 	Don't use this regularly, it's always a case of pre-mature optimization
 	var set = $('example input')
 	for(var item; i=-1; item=set[++i]){
-		all_values += item.attributes.getNamedItem(‘value’).nodeValue; + '\n';
+		all_values += item.attributes.getNamedItem('value').nodeValue; + '\n';
 	}
 
 
