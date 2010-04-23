@@ -3,6 +3,10 @@
 <title>jQuery and the DOM</title>
 <style>
 body { font-family: arial, helvetica, sans-serif; font-size: 77%; }
+code, pre { font-size: 1.2em; }
+ul ul ul { list-style-type: circle; }
+ul ul { list-style-type: upper-roman; }
+ul { list-style-type: lower-roman;}
 </style>
 </head>
 <body>
@@ -24,7 +28,7 @@ body { font-family: arial, helvetica, sans-serif; font-size: 77%; }
 	May be a DOM Element, Document, or jQuery element.
 </pre>
 
-<li>Basic Selectors (<a href="http://api.jquery.com/category/selectors/basic-css-selectors/">jQuery docs</a>)</li>
+<li>Basic Selectors (<a href="http://api.jquery.com/category/selectors/basic-css-selectors/">jQuery Basic CSS Selectors</a>)</li>
 <pre>
 	$('*') - universal selector [CSS2]
 	$('.class') - class seletor [CSS1]
@@ -33,20 +37,16 @@ body { font-family: arial, helvetica, sans-serif; font-size: 77%; }
 	$(".a, .b, .c") - multiple selections
 </pre>
 	
-<li>CSS</li>
-<p>http://api.jquery.com/category/selectors/hierarchy-selectors/
-	http://www.w3.org/TR/CSS21/selector.html</p>
+<li>CSS Selectors (<a href="http://api.jquery.com/category/selectors/hierarchy-selectors/">jQuery Hierarchy Selectors</a> | <a href="http://www.w3.org/TR/CSS21/selector.html">CSS 2.1 Spec</a>)</li>
 
-<pre>
-	$('e f') - matches any f that is a decendant of e [CSS1]
+
+	<code>$('e f')</code> - matches any f that is a decendant of e [CSS1]
 	$('e > f') - matches any f that is a child of e (child selector) [CSS2]
 	$('e + f') - matches any f that is directly preceded by e (adjacent sibling selector) [CSS2]
 	$('e ~ f') - matches any f that are preceded by e (general sibling selector) [CSS3]
-</pre>
+
 	
-<li>Attribute Selectors []</li>
-<p>http://api.jquery.com/category/selectors/attribute-selectors/
-	http://www.w3.org/TR/css3-selectors/#attribute-selectors</p>
+<li>Attribute Selectors [ ] (<a href="http://api.jquery.com/category/selectors/attribute-selectors/">jQuery Attribute Selectors</a> | <a href="http://www.w3.org/TR/css3-selectors/#attribute-selectors">CSS 3 Spec</a>)</li>
 
 <p>Syntax : can vary: $('[attr=val]') or $('[attr="val"]')</p>
 
@@ -63,11 +63,9 @@ body { font-family: arial, helvetica, sans-serif; font-size: 77%; }
 	$('[attr][attr2]') - multiple attribute match
 </pre>
 	
-<li>Pseudo-classes</li>
+<li>Pseudo-class Selection</li>
 <ul>
-<li>Structural</li>
-<p>http://api.jquery.com/category/selectors/child-filter-selectors/
-	http://www.w3.org/TR/css3-selectors/#structural-pseudos</p>
+<li>Structural Pseudo-classes (<a href="http://api.jquery.com/category/selectors/child-filter-selectors/">jQuery Child Filter Selectors</a> | <a href="http://www.w3.org/TR/css3-selectors/#structural-pseudos">CSS3 Structural Pseudo-classes</a>)</li>
 	
 <pre>
 	$('div > p:first-child') - matches the first p child of every div (equiv: ":nth-child(1)") [CSS2]
